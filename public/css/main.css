@@ -1,0 +1,251 @@
+:root {
+    --color-bg: #F3F4EC;
+    --color-surface: #FFFFFF;
+    --color-ink: #1F2B22;
+    --color-ink-soft: #4B5A4E;
+    --color-brand: #2F6B4F;
+    --color-brand-dark: #234F3B;
+    --color-accent: #E2A33D;
+    --color-border: #DCDFD3;
+
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Public Sans', sans-serif;
+
+    --radius: 6px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    line-height: 1.6;
+}
+
+h1,
+h2 {
+    font-family: var(--font-display);
+    color: var(--color-ink);
+    line-height: 1.2;
+    margin: 0 0 0.5em;
+}
+
+h1 {
+    font-size: 2.25rem;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+p {
+    margin: 0 0 1em;
+    max-width: 62ch;
+}
+
+a {
+    color: var(--color-brand);
+}
+
+a:focus-visible,
+.cta:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+}
+
+/* Header */
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.brand {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--color-ink);
+    text-decoration: none;
+}
+
+.site-header nav ul {
+    display: flex;
+    gap: 1.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.site-header nav a {
+    color: var(--color-ink-soft);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.site-header nav a:hover {
+    color: var(--color-brand);
+}
+
+/* Main */
+main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 2rem 4rem;
+}
+
+.lede {
+    color: var(--color-ink-soft);
+    font-size: 1.05rem;
+}
+
+/* Hero (home page) */
+.hero {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 2.5rem;
+}
+
+.hero-copy {
+    flex: 1;
+}
+
+.hero-mark {
+    width: 140px;
+    height: auto;
+    flex-shrink: 0;
+}
+
+.cta {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.65rem 1.25rem;
+    background: var(--color-brand);
+    color: #fff;
+    border-radius: var(--radius);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.cta:hover {
+    background: var(--color-brand-dark);
+}
+
+/* Organization + project lists */
+.org-list,
+.project-list {
+    list-style: none;
+    margin: 2rem 0 0;
+    padding: 0;
+}
+
+.org-row,
+.project-row {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--color-border);
+}
+
+.org-list li:last-child,
+.project-list li:last-child {
+    border-bottom: 1px solid var(--color-border);
+}
+
+.org-logo {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 0.5rem;
+    flex-shrink: 0;
+}
+
+.tag {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: var(--color-brand-dark);
+    background: rgba(47, 107, 79, 0.1);
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    margin-bottom: 0.5rem;
+}
+
+.project-row .status {
+    flex-shrink: 0;
+    width: 90px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding-top: 0.2rem;
+}
+
+.status-ongoing {
+    color: var(--color-brand-dark);
+}
+
+.status-upcoming {
+    color: var(--color-accent);
+}
+
+.project-org {
+    font-size: 0.85rem;
+    color: var(--color-ink-soft);
+    font-weight: 500;
+    margin-bottom: 0.35rem;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--color-ink-soft);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--color-border);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .site-header {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+
+    .hero {
+        flex-direction: column-reverse;
+    }
+
+    .org-row,
+    .project-row {
+        flex-direction: column;
+    }
+
+    .project-row .status {
+        width: auto;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
