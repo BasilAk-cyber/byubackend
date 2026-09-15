@@ -5,6 +5,7 @@ import 'dotenv/config';
 import { testConnection } from './src/models/db.js';
 import { getAllOrganizations } from './src/models/organizations.js';
 import { getAllProjects } from './src/models/projects.js';
+import { getAllCategories } from './src/models/catergories.js';
 
 // ES modules don't have __dirname built in, so reconstruct it
 const __filename = fileURLToPath(import.meta.url);
@@ -53,8 +54,17 @@ app.get('/projects', async (req, res) => {
 });
 
 app.get('/catergories', async (req, res) => {
-    const title = 'Catergories';
-    res.render('catergories', { title });
+    try {
+        const catergories = await getAllCategories();
+        console.log(catergories)
+        res.render('catergories', {
+            title: 'Project Categories',
+            catergories
+        });
+    } catch (err) {
+        console.error('Error fetching categories:', err);
+        res.status(500).send('Error loading categories');
+    }
 });
 
 /**
@@ -64,7 +74,7 @@ app.listen(PORT, async () => {
     try {
         await testConnection();
         console.log(`Server is running at http://127.0.0.1:${PORT}`);
-        console.log(`Environment: ${NODE_ENV}`);
+        //console.log(`Environment: ${NODE_ENV}`);
     } catch (error) {
         console.error('Error connecting to the database:', error);
     }

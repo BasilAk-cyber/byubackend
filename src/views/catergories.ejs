@@ -1,14 +1,22 @@
 <%- include('partials/header') %>
+
     <main>
         <h1>
             <%= title %>
         </h1>
+        <p class="lede">Browse the different catergories of service projects.</p>
 
-        <ul>
-            <li>Environmental</li>
-            <li>Educational</li>
-            <li>Community Service</li>
-            <li>Health and Wellness</li>
+        <ul class="category-list">
+            <% if (catergories && catergories.length> 0) { %>
+                <% catergories.forEach(category=> { %>
+                    <li class="category-item">
+                        <%= category.name %>
+                    </li>
+                    <% }) %>
+                        <% } else { %>
+                            <li>No catergories found.</li>
+                            <% } %>
         </ul>
     </main>
+
     <%- include('partials/footer') %>
