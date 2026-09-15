@@ -1,35 +1,19 @@
 <%- include('partials/header') %>
+    <main>
+        <h1>
+            <%= title %>
+        </h1>
 
-<main>
-    <h1><%= title %></h1>
-    <p class="lede">Three organizations are currently partnered with the network. Each welcomes volunteers on a rolling basis.</p>
+        <p>Here are a few of our partner organizations:</p>
+        <ul>
 
-    <ul class="org-list">
-        <li class="org-row">
-            <img class="org-logo" src="/images/brightfuture-logo.png" alt="Bright Future logo">
-            <div class="org-info">
-                <h2>Bright Future</h2>
-                <span class="tag">Youth &amp; education</span>
-                <p>Runs after-school tutoring and mentorship for middle schoolers in under-resourced districts.</p>
-            </div>
-        </li>
-        <li class="org-row">
-            <img class="org-logo" src="/images/greenharvest-logo.png" alt="Green Harvest logo">
-            <div class="org-info">
-                <h2>Green Harvest</h2>
-                <span class="tag">Food security</span>
-                <p>Grows produce on reclaimed city lots and distributes it free through neighborhood food shares.</p>
-            </div>
-        </li>
-        <li class="org-row">
-            <img class="org-logo" src="/images/unityserve-logo.png" alt="Unity Serve logo">
-            <div class="org-info">
-                <h2>Unity Serve</h2>
-                <span class="tag">Community outreach</span>
-                <p>Coordinates meal delivery, coat drives, and welcome programs for newly resettled families.</p>
-            </div>
-        </li>
-    </ul>
-</main>
+            <% organizations.forEach(organization=> { %>
+                <li><img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo"><strong>
+                        <%= organization.name %>
+                    </strong>: <%= organization.contact_email %>
+                </li>
+                <% }); %>
+        </ul>
+    </main>
 
-<%- include('partials/footer') %>
+    <%- include('partials/footer') %>
