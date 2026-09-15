@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import 'dotenv/config';
 import { testConnection } from './src/models/db.js';
 import { getAllOrganizations } from './src/models/organizations.js';
+import { getAllProjects } from './src/models/projects.js';
 
 // ES modules don't have __dirname built in, so reconstruct it
 const __filename = fileURLToPath(import.meta.url);
@@ -39,8 +40,16 @@ app.get('/organizations', async (req, res) => {
 });
 
 app.get('/projects', async (req, res) => {
-    const title = 'Service Projects';
-    res.render('projects', { title });
+    try {
+        const projects = await getAllProjects();
+        res.render('projects', {
+            title: 'Service Projects',
+            projects
+        });
+    } catch (err) {
+        console.error('Error fetching projects:', err);
+        res.status(500).send('Error loading projects');
+    }
 });
 
 app.get('/catergories', async (req, res) => {
