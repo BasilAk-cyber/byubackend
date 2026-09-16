@@ -1,27 +1,35 @@
+-- ======================
+-- 1. Organization Table
+-- ======================
 CREATE TABLE organization (
     organization_id SERIAL PRIMARY KEY,
-    name VARCHAR(150) NOT NULL,
-    description TEXT NOT NULL,
-    contact_email VARCHAR(255) NOT NULL,
-    logo_filename VARCHAR(255) NOT NULL
+    name            VARCHAR(150) NOT NULL,
+    description     TEXT NOT NULL,
+    contact_email   VARCHAR(255) NOT NULL,
+    logo_filename   VARCHAR(255) NOT NULL
 );
 
-INSERT INTO organization (name, description, contact_email, logo_filename)
-VALUES
+INSERT INTO organization (name, description, contact_email, logo_filename) VALUES
 ('BrightFuture Builders', 'A nonprofit focused on improving community infrastructure through sustainable construction projects.', 'info@brightfuturebuilders.org', 'brightfuture-logo.png'),
 ('GreenHarvest Growers', 'An urban farming collective promoting food sustainability and education in local neighborhoods.', 'contact@greenharvest.org', 'greenharvest-logo.png'),
 ('UnityServe Volunteers', 'A volunteer coordination group supporting local charities and service initiatives.', 'hello@unityserve.org', 'unityserve-logo.png');
 
-CREATE TABLE service_projects (
-    project_id SERIAL PRIMARY KEY,
-    organization_id INTEGER NOT NULL REFERENCES organization (organization_id),
-    title VARCHAR(150) NOT NULL,
-    description TEXT NOT NULL,
-    location VARCHAR(255) NOT NULL,
-    date DATE NOT NULL
-);
 
-SELECT * FROM organization
+-- ======================
+-- 2. Service Projects Table
+-- ======================
+CREATE TABLE service_projects (
+    project_id      SERIAL PRIMARY KEY,
+    organization_id INTEGER NOT NULL,
+    title           VARCHAR(150) NOT NULL,
+    description     TEXT NOT NULL,
+    location        VARCHAR(255) NOT NULL,
+    date            DATE NOT NULL,
+    CONSTRAINT fk_organization
+        FOREIGN KEY (organization_id)
+        REFERENCES organization (organization_id)
+        ON DELETE CASCADE
+);
 
 INSERT INTO service_projects (organization_id, title, description, location, date) VALUES
 -- Organization 1
@@ -45,23 +53,15 @@ INSERT INTO service_projects (organization_id, title, description, location, dat
 (3, 'Clothing Swap Event', 'Hosting a free community clothing exchange to reduce textile waste.', 'Pocatello, ID', '2026-10-03'),
 (3, 'Trail Building Weekend', 'Constructing a new section of accessible hiking trail.', 'Chubbuck, ID', '2026-06-06');
 
--- ======================
--- Categories
--- ======================
 
+-- ======================
+-- 3. Categories Table
+-- ======================
 CREATE TABLE categories (
     category_id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE
+    name        VARCHAR(100) NOT NULL UNIQUE
 );
 
--- Junction table (many-to-many)
-CREATE TABLE project_categories (
-    project_id INTEGER NOT NULL REFERENCES service_projects(project_id) ON DELETE CASCADE,
-    category_id INTEGER NOT NULL REFERENCES categories(category_id) ON DELETE CASCADE,
-    PRIMARY KEY (project_id, category_id)
-);
-
--- Insert at least 3 categories
 INSERT INTO categories (name) VALUES
 ('Community Development'),
 ('Education & Mentoring'),
@@ -69,26 +69,43 @@ INSERT INTO categories (name) VALUES
 ('Health & Wellness'),
 ('Animal Welfare');
 
--- Associate every project with at least one category
--- (Assumes your service_projects have project_id 1–15)
+
+-- ======================
+-- 4. Junction Table (Many-to-Many)
+-- ======================
+CREATE TABLE project_categories (
+    project_id  INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
+    PRIMARY KEY (project_id, category_id),
+    CONSTRAINT fk_project
+        FOREIGN KEY (project_id)
+        REFERENCES service_projects (project_id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_category
+        FOREIGN KEY (category_id)
+        REFERENCES categories (category_id)
+        ON DELETE CASCADE
+);
+
+-- Link projects to categories
 INSERT INTO project_categories (project_id, category_id) VALUES
--- Organization 1 projects
-(1, 1), (1, 3),          -- Community Garden Build
-(2, 1),                  -- Winter Coat Drive
-(3, 2),                  -- Senior Center Tech Help
-(4, 3),                  -- River Cleanup Day
-(5, 1),                  -- Food Bank Sorting Event
+-- Organization 1
+(1, 1), (1, 3),     -- Community Garden Build
+(2, 1),             -- Winter Coat Drive
+(3, 2),             -- Senior Center Tech Help
+(4, 3),             -- River Cleanup Day
+(5, 1),             -- Food Bank Sorting Event
 
--- Organization 2 projects
-(6, 2),                  -- Youth Literacy Program
-(7, 3),                  -- Habitat Restoration Hike
-(8, 2),                  -- School Supply Packing
-(9, 1), (9, 4),          -- Community Meal Service
-(10, 1), (10, 3),        -- Park Beautification Project
+-- Organization 2
+(6, 2),             -- Youth Literacy Program
+(7, 3),             -- Habitat Restoration Hike
+(8, 2),             -- School Supply Packing
+(9, 1), (9, 4),     -- Community Meal Service
+(10, 1), (10, 3),   -- Park Beautification Project
 
--- Organization 3 projects
-(11, 5),                 -- Animal Shelter Volunteer Day
-(12, 1),                 -- Home Repair for Elderly
-(13, 4),                 -- Blood Drive Coordination
-(14, 1),                 -- Clothing Swap Event
-(15, 3);                 -- Trail Building Weekend
+-- Organization 3
+(11, 5),            -- Animal Shelter Volunteer Day
+(12, 1),            -- Home Repair for Elderly
+(13, 4),            -- Blood Drive Coordination
+(14, 1),            -- Clothing Swap Event
+(15, 3);            -- Trail Building Weekend
