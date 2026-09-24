@@ -1,28 +1,65 @@
 <%- include('partials/header') %>
 
 <main>
-    <h1><%= title %></h1>
-
     <% if (organization) { %>
-        <% if (organization.logo_filename) { %>
-            <img
-                src="/images/<%= organization.logo_filename %>"
-                alt="<%= organization.name %> logo"
-            >
-        <% } %>
+        <section class="hero">
+            <div class="hero-copy">
+                <p class="tag">Partner organization</p>
+                <h1><%= organization.name %></h1>
+                <p class="lede"><%= organization.description %></p>
+                <% if (organization.contact_email) { %>
+                    <p>
+                        <strong>Contact:</strong>
+                        <a href="mailto:<%= organization.contact_email %>">
+                            <%= organization.contact_email %>
+                        </a>
+                    </p>
+                <% } %>
+            </div>
 
-        <p><%= organization.description %></p>
+            <% if (organization.logo_filename) { %>
+                <img
+                    class="hero-mark org-logo"
+                    src="/images/<%= organization.logo_filename %>"
+                    alt="<%= organization.name %> logo"
+                >
+            <% } %>
+        </section>
 
-        <% if (organization.contact_email) { %>
-            <p>
-                <strong>Contact:</strong>
-                <a href="mailto:<%= organization.contact_email %>">
-                    <%= organization.contact_email %>
-                </a>
-            </p>
-        <% } %>
+        <h2>Service projects</h2>
+        <ul class="project-list">
+            <% if (projects && projects.length > 0) { %>
+                <% projects.forEach(project => { %>
+                    <li class="project-row">
+                        <div class="project-info">
+                            <p class="project-org">
+                                <%= new Date(project.date).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                }) %>
+                            </p>
+                            <h2>
+                                <a href="/project/<%= project.project_id %>">
+                                    <%= project.title %>
+                                </a>
+                            </h2>
+                            <% if (project.location) { %>
+                                <p class="lede"><%= project.location %></p>
+                            <% } %>
+                        </div>
+                    </li>
+                <% }) %>
+            <% } else { %>
+                <li class="project-row">
+                    <p>No projects for this organization.</p>
+                </li>
+            <% } %>
+        </ul>
     <% } else { %>
-        <p>Organization not found.</p>
+        <h1>Organization not found</h1>
+        <p class="lede">That partner organization does not exist.</p>
+        <a class="cta" href="/organizations">Back to organizations</a>
     <% } %>
 </main>
 

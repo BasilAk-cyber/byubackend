@@ -1,0 +1,10 @@
+<%- include('../partials/header') %>
+<main>
+    <h1><%= title %></h1>
+    <p>Something went wrong on the server.</p>
+    <% if (typeof NODE_ENV !== 'undefined' && NODE_ENV === 'development') { %>
+        <pre><%= error %></pre>
+        <pre><%= stack %></pre>
+    <% } %>
+</main>
+<%- include('../partials/footer') %>
