@@ -3,11 +3,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import 'dotenv/config';
 import { testConnection } from './src/models/db.js';
-import { getAllOrganizations } from './src/models/organizations.js';
-import { getAllProjects } from './src/models/projects.js';
-import { getAllCategories } from './src/models/catergories.js';
+import router from './src/routes.js';
 
-// ES modules don't have __dirname built in, so reconstruct it
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -16,82 +13,46 @@ const PORT = process.env.PORT || 3003;
 
 const NODE_ENV = process.env.NODE_ENV || "development";
 
-/**
- * Middleware
- */
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Set EJS as the templating engine
 app.set('view engine', 'ejs');
 
-// Tell Express where to find your templates
 app.set('views', path.join(__dirname, 'src/views'));
 
-
-// Middleware to log all incoming requests
 app.use((req, res, next) => {
     if (NODE_ENV === 'development') {
         console.log(`${req.method} ${req.url}`);
     }
-    next(); // Pass control to the next middleware or route
+    next(); 
 });
 
-// Middleware to make NODE_ENV available to all templates
 app.use((req, res, next) => {
     res.locals.NODE_ENV = NODE_ENV;
     next();
 });
 
-/**
- * Routes
- */
-app.get('/', async (req, res) => {
-    const title = 'Home';
-    res.render('home', { title });
+app.use(router);
+
+app.use((err, req, res, next) => {
+    console.error('Error occurred:', err.message);
+    console.error('Stack trace:', err.stack);
+
+    const status = err.status || 500;
+    const template = status === 404 ? '404' : '500';
+
+    const context = {
+        title: status === 404 ? 'Page Not Found' : 'Server Error',
+        error: err.message,
+        stack: err.stack
+    };
+
+    res.status(status).render(`errors/${template}`, context);
 });
 
-app.get('/organizations', async (req, res) => {
-    const organizations = await getAllOrganizations();
-    const title = 'Our Partner Organizations';
-
-    res.render('organizations', { title, organizations });
-});
-
-app.get('/projects', async (req, res) => {
-    try {
-        const projects = await getAllProjects();
-        res.render('projects', {
-            title: 'Service Projects',
-            projects
-        });
-    } catch (err) {
-        console.error('Error fetching projects:', err);
-        res.status(500).send('Error loading projects');
-    }
-});
-
-app.get('/catergories', async (req, res) => {
-    try {
-        const catergories = await getAllCategories();
-        console.log(catergories)
-        res.render('catergories', {
-            title: 'Project Categories',
-            catergories
-        });
-    } catch (err) {
-        console.error('Error fetching categories:', err);
-        res.status(500).send('Error loading categories');
-    }
-});
-
-/**
- * Start server
- */
 app.listen(PORT, async () => {
     try {
         await testConnection();
         console.log(`Server is running at http://127.0.0.1:${PORT}`);
-        //console.log(`Environment: ${NODE_ENV}`);
     } catch (error) {
         console.error('Error connecting to the database:', error);
     }
