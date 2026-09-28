@@ -98,4 +98,29 @@ const updateCategoryAssignments = async (projectId, categoryIds) => {
     }
 };
 
-export { getUpcomingProjects, getProjectDetails,createProject, updateCategoryAssignments };
+const updateProject = async (id, title, description, location, date, organizationId) => {
+    const sql = `
+        UPDATE projects
+        SET title = ?,
+            description = ?,
+            location = ?,
+            date = ?,
+            organization_id = ?
+        WHERE id = ?
+    `;
+
+    const [result] = await pool.query(sql, [
+        title,
+        description,
+        location,
+        date,
+        organizationId,
+        id
+    ]);
+
+    if (result.affectedRows === 0) {
+        throw new Error('Project not found');
+    }
+};
+
+export { getUpcomingProjects, getProjectDetails,createProject, updateCategoryAssignments, updateProject };
