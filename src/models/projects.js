@@ -62,4 +62,22 @@ const getProjectDetails = async (id) => {
     return result.rows[0];
 };
 
-export { getUpcomingProjects, getProjectDetails };
+const createProject = async (title, description, location, date, organizationId) => {
+    const sql = `
+        INSERT INTO projects (title, description, location, date, organization_id)
+        VALUES (?, ?, ?, ?, ?)
+    `;
+
+    const [result] = await pool.query(sql, [
+        title,
+        description,
+        location,
+        date,
+        organizationId
+    ]);
+
+    return result.insertId;
+};
+
+
+export { getUpcomingProjects, getProjectDetails,createProject };
