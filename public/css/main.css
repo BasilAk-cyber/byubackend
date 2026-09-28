@@ -248,6 +248,76 @@ footer {
     border-color: #bee5eb;
 }
 
+/* ---- Forms ---- */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    max-width: 36rem;
+    margin-top: 0.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.form-group label {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--color-ink);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    color: var(--color-ink);
+}
+
+.form-group textarea {
+    min-height: 8rem;
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 1px;
+    border-color: var(--color-brand);
+}
+
+form button[type="submit"] {
+    align-self: flex-start;
+    margin-top: 0.25rem;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.7rem 1.15rem;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--color-brand);
+    color: #fff;
+    cursor: pointer;
+}
+
+form button[type="submit"]:hover {
+    background: var(--color-brand-dark);
+}
+
+form button[type="submit"]:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+}
+
 /* Responsive */
 @media (max-width: 640px) {
     .site-header {
