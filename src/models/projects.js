@@ -79,5 +79,23 @@ const createProject = async (title, description, location, date, organizationId)
     return result.insertId;
 };
 
+const assignCategoryToProject = async (projectId, categoryId) => {
+    const sql = `
+        INSERT INTO project_categories (project_id, category_id)
+        VALUES (?, ?)
+    `;
+    await pool.query(sql, [projectId, categoryId]);
+};
 
-export { getUpcomingProjects, getProjectDetails,createProject };
+const updateCategoryAssignments = async (projectId, categoryIds) => {
+    await pool.query(
+        'DELETE FROM project_categories WHERE project_id = ?',
+        [projectId]
+    );
+
+    for (const categoryId of categoryIds) {
+        await assignCategoryToProject(projectId, categoryId);
+    }
+};
+
+export { getUpcomingProjects, getProjectDetails,createProject, updateCategoryAssignments };

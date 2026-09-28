@@ -1,0 +1,26 @@
+<%- include('partials/header') %>
+<main>
+    <h1><%= title %></h1>
+    <p>Project: <%= project.title %></p>
+
+    <form action="/project/<%= project.id %>/assign-categories" method="POST">
+        <% categories.forEach(category => { %>
+            <div class="form-group">
+                <label>
+                    <input
+                        type="checkbox"
+                        name="categoryIds"
+                        value="<%= category.id %>"
+                        <% if (assignedCategories.some(assigned => assigned.id === category.id)) { %>
+                            checked
+                        <% } %>
+                    />
+                    <%= category.name %>
+                </label>
+            </div>
+        <% }); %>
+
+        <button type="submit">Save Categories</button>
+    </form>
+</main>
+<%- include('partials/footer') %>
