@@ -4,14 +4,26 @@ import { fileURLToPath } from 'url';
 import 'dotenv/config';
 import { testConnection } from './src/models/db.js';
 import router from './src/routes.js';
+import session from 'express-session';
+import flash from './src/middleware/flash.js';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3003;
-
+const SESSION_SECRET = process.env.SESSION_SECRET;
 const NODE_ENV = process.env.NODE_ENV || "development";
+
+app.use(session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60 * 60 * 1000 } // Session expires after 1 hour of inactivity
+}));
+
+app.use(flash);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
