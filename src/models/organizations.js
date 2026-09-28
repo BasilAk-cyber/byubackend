@@ -58,4 +58,17 @@ const createOrganization = async (name, description, contactEmail, logoFilename)
   return result.rows[0].organization_id;
 };
 
-export { getAllOrganizations, getOrganizationById, getProjectsByOrganizationId, createOrganization };
+const updateOrganization = async (id, name, description, contactEmail, logoFilename) => {
+  const sql = `
+      UPDATE organizations
+      SET name = ?,
+          description = ?,
+          contact_email = ?,
+          logo_filename = ?
+      WHERE id = ?
+  `;
+
+  await pool.query(sql, [name, description, contactEmail, logoFilename, id]);
+};
+
+export { getAllOrganizations, getOrganizationById, getProjectsByOrganizationId, createOrganization, updateOrganization };
