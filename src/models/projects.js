@@ -62,4 +62,4 @@ const getProjectDetails = async (id) => {
     return result.rows[0];
 };
 
-export { getAllProjects, getUpcomingProjects, getProjectDetails };
+export { getUpcomingProjects, getProjectDetails };

@@ -13,6 +13,9 @@ const PORT = process.env.PORT || 3003;
 
 const NODE_ENV = process.env.NODE_ENV || "development";
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.set('view engine', 'ejs');
