@@ -1,11 +1,10 @@
 import { body, validationResult } from 'express-validator';
-import { getProjectDetails } from '../models/projects.js';
+import { getProjectDetails, updateCategoryAssignments } from '../models/projects.js';
 import {
     getAllCategories,
     getCategoryById,
     getProjectsByCategoryId,
     getCategoriesByProjectId,
-    updateCategoryAssignments,
     createCategory,
     updateCategory
 } from '../models/categories.js';
