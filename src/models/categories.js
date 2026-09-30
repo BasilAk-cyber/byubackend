@@ -53,9 +53,29 @@ const getProjectsByCategoryId = async (categoryId) => {
     return result.rows;
 };
 
+const createCategory = async (name) => {
+    const [result] = await pool.query(
+        'INSERT INTO categories (name) VALUES (?)',
+        [name]
+    );
+    return result.insertId;
+};
+
+const updateCategory = async (id, name) => {
+    const [result] = await pool.query(
+        'UPDATE categories SET name = ? WHERE id = ?',
+        [name, id]
+    );
+    if (result.affectedRows === 0) {
+        throw new Error('Category not found');
+    }
+};
+
 export {
     getAllCategories,
     getCategoryById,
     getCategoriesByProjectId,
-    getProjectsByCategoryId
+    getProjectsByCategoryId,
+    createCategory,
+    updateCategory
 };
