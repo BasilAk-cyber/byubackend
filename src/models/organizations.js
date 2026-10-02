@@ -59,16 +59,23 @@ const createOrganization = async (name, description, contactEmail, logoFilename)
 };
 
 const updateOrganization = async (id, name, description, contactEmail, logoFilename) => {
-  const sql = `
-      UPDATE organizations
-      SET name = ?,
-          description = ?,
-          contact_email = ?,
-          logo_filename = ?
-      WHERE id = ?
+  const query = `
+    UPDATE organization
+    SET name = $1,
+        description = $2,
+        contact_email = $3,
+        logo_filename = $4
+    WHERE organization_id = $5
+    RETURNING organization_id
   `;
 
-  await pool.query(sql, [name, description, contactEmail, logoFilename, id]);
+  const result = await db.query(query, [name, description, contactEmail, logoFilename, id]);
+
+  if (result.rows.length === 0) {
+    throw new Error('Failed to update organization');
+  }
+
+  return result.rows[0].organization_id;
 };
 
 export { getAllOrganizations, getOrganizationById, getProjectsByOrganizationId, createOrganization, updateOrganization };

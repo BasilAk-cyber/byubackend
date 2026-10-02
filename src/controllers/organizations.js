@@ -73,6 +73,8 @@ const showEditOrganizationForm = async (req, res) => {
     const { id } = req.params;
     const organizationDetails = await getOrganizationById(id);
 
+    console.log(organizationDetails);
+
     res.render('edit-organization', {
         title: 'Edit Organization',
         organizationDetails
