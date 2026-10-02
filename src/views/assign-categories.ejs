@@ -3,15 +3,15 @@
     <h1><%= title %></h1>
     <p>Project: <%= project.title %></p>
 
-    <form action="/project/<%= project.id %>/assign-categories" method="POST">
+    <form action="/project/<%= project.project_id %>/assign-categories" method="POST">
         <% categories.forEach(category => { %>
             <div class="form-group">
                 <label>
                     <input
                         type="checkbox"
                         name="categoryIds"
-                        value="<%= category.id %>"
-                        <% if (assignedCategories.some(assigned => assigned.id === category.id)) { %>
+                        value="<%= category.category_id %>"
+                        <% if (assignedCategories.some(assigned => assigned.category_id === category.category_id)) { %>
                             checked
                         <% } %>
                     />

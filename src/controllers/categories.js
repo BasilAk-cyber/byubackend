@@ -55,6 +55,8 @@ const processAssignCategoriesForm = async (req, res) => {
         categoryIds = [categoryIds];
     }
 
+    console.log(categoryIds)
+
     await updateCategoryAssignments(projectId, categoryIds);
 
     req.flash('success', 'Categories updated successfully!');

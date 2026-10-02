@@ -63,12 +63,13 @@ const getProjectDetails = async (id) => {
 };
 
 const createProject = async (title, description, location, date, organizationId) => {
-    const sql = `
-        INSERT INTO projects (title, description, location, date, organization_id)
-        VALUES (?, ?, ?, ?, ?)
+    const query = `
+        INSERT INTO service_projects (title, description, location, date, organization_id)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING project_id
     `;
 
-    const [result] = await pool.query(sql, [
+    const result = await db.query(query, [
         title,
         description,
         location,
@@ -76,40 +77,52 @@ const createProject = async (title, description, location, date, organizationId)
         organizationId
     ]);
 
-    return result.insertId;
+    if (result.rows.length === 0) {
+        throw new Error('Failed to create project');
+    }
+
+    return result.rows[0].project_id;
 };
 
 const assignCategoryToProject = async (projectId, categoryId) => {
-    const sql = `
+    const query = `
         INSERT INTO project_categories (project_id, category_id)
-        VALUES (?, ?)
+        VALUES ($1, $2)
     `;
-    await pool.query(sql, [projectId, categoryId]);
+    await db.query(query, [projectId, categoryId]);
 };
 
 const updateCategoryAssignments = async (projectId, categoryIds) => {
-    await pool.query(
-        'DELETE FROM project_categories WHERE project_id = ?',
+    const ids = []
+        .concat(categoryIds ?? [])
+        .map((id) => String(id).trim())
+        .filter((id) => id !== '')
+        .map((id) => Number(id))
+        .filter((id) => Number.isInteger(id));
+
+    await db.query(
+        'DELETE FROM project_categories WHERE project_id = $1',
         [projectId]
     );
 
-    for (const categoryId of categoryIds) {
+    for (const categoryId of ids) {
         await assignCategoryToProject(projectId, categoryId);
     }
 };
 
 const updateProject = async (id, title, description, location, date, organizationId) => {
-    const sql = `
-        UPDATE projects
-        SET title = ?,
-            description = ?,
-            location = ?,
-            date = ?,
-            organization_id = ?
-        WHERE id = ?
+    const query = `
+        UPDATE service_projects
+        SET title = $1,
+            description = $2,
+            location = $3,
+            date = $4,
+            organization_id = $5
+        WHERE project_id = $6
+        RETURNING project_id
     `;
 
-    const [result] = await pool.query(sql, [
+    const result = await db.query(query, [
         title,
         description,
         location,
@@ -118,9 +131,11 @@ const updateProject = async (id, title, description, location, date, organizatio
         id
     ]);
 
-    if (result.affectedRows === 0) {
+    if (result.rows.length === 0) {
         throw new Error('Project not found');
     }
+
+    return result.rows[0].project_id;
 };
 
 export { getUpcomingProjects, getProjectDetails,createProject, updateCategoryAssignments, updateProject };

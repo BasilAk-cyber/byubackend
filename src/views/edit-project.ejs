@@ -2,13 +2,13 @@
 <main>
     <h1><%= title %></h1>
 
-    <form action="/edit-project/<%= project.id %>" method="POST">
+    <form action="/edit-project/<%= project.project_id %>" method="POST">
         <div class="form-group">
             <label for="organizationId">Organization</label>
             <select id="organizationId" name="organizationId" required>
                 <% organizations.forEach(org => { %>
                     <option
-                        value="<%= org.id %>"
+                        value="<%= org.organization_id %>"
                         <%= Number(org.id) === Number(project.organization_id) ? 'selected' : '' %>
                     >
                         <%= org.name %>

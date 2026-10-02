@@ -8,7 +8,7 @@
             <select id="organizationId" name="organizationId" required>
                 <option value="">Select an organization</option>
                 <% organizations.forEach(org => { %>
-                    <option value="<%= org.id %>"><%= org.name %></option>
+                    <option value="<%= org.organization_id %>"><%= org.name %></option>
                 <% }); %>
             </select>
         </div>

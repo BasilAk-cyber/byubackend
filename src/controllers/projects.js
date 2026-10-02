@@ -60,6 +60,7 @@ const showProjectDetailsPage = async (req, res) => {
 
 const showNewProjectForm = async (req, res) => {
     const organizations = await getAllOrganizations();
+    console.log(organizations);
     res.render('new-project', {
         title: 'New Project',
         organizations
