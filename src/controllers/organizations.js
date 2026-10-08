@@ -14,12 +14,14 @@ const organizationValidation = [
         .withMessage('Organization description is required')
         .isLength({ max: 500 })
         .withMessage('Organization description cannot exceed 500 characters'),
-    body('contactEmail')
-        .normalizeEmail()
-        .notEmpty()
-        .withMessage('Contact email is required')
-        .isEmail()
-        .withMessage('Please provide a valid email address')
+        body('contactEmail')
+        .trim()
+        .notEmpty().withMessage('Contact email is required')
+        .isEmail().withMessage('Please provide a valid email address'),
+    body('logoFilename')
+        .optional({ checkFalsy: true })
+        .trim()
+        .isLength({ max: 255 }).withMessage('Logo filename cannot exceed 255 characters')
 ];
 
 const showOrganizationsPage = async (req, res) => {
@@ -92,7 +94,8 @@ const processEditOrganizationForm = async (req, res) => {
         return res.redirect(`/edit-organization/${id}`);
     }
 
-    const { name, description, contactEmail, logoFilename } = req.body;
+    const { name, description, contactEmail } = req.body;
+    const logoFilename = req.body.logoFilename?.trim() || 'placeholder-logo.png';
 
     await updateOrganization(id, name, description, contactEmail, logoFilename);
 

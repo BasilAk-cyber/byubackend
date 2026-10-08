@@ -93,21 +93,21 @@ const assignCategoryToProject = async (projectId, categoryId) => {
 };
 
 const updateCategoryAssignments = async (projectId, categoryIds) => {
-    const ids = []
-        .concat(categoryIds ?? [])
-        .map((id) => String(id).trim())
-        .filter((id) => id !== '')
-        .map((id) => Number(id))
-        .filter((id) => Number.isInteger(id));
+    const ids = [...new Set(
+        [].concat(categoryIds ?? [])
+          .map(Number)
+          .filter(Number.isInteger)
+    )];
 
     await db.query(
-        'DELETE FROM project_categories WHERE project_id = $1',
-        [projectId]
+        `WITH deleted AS (
+             DELETE FROM project_categories WHERE project_id = $1
+         )
+         INSERT INTO project_categories (project_id, category_id)
+         SELECT $1, UNNEST($2::int[])
+         ON CONFLICT DO NOTHING`,
+        [projectId, ids]
     );
-
-    for (const categoryId of ids) {
-        await assignCategoryToProject(projectId, categoryId);
-    }
 };
 
 const updateProject = async (id, title, description, location, date, organizationId) => {

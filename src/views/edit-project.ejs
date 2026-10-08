@@ -9,7 +9,7 @@
                 <% organizations.forEach(org => { %>
                     <option
                         value="<%= org.organization_id %>"
-                        <%= Number(org.id) === Number(project.organization_id) ? 'selected' : '' %>
+                        <%= Number(org.organization_id) === Number(project.organization_id) ? 'selected' : '' %>
                     >
                         <%= org.name %>
                     </option>

@@ -62,27 +62,25 @@ const showNewProjectForm = async (req, res) => {
     const organizations = await getAllOrganizations();
     console.log(organizations);
     res.render('new-project', {
-        title: 'New Project',
+        title: 'New Project',   
         organizations
     });
 };
 
-const processNewProjectForm = async (req, res) => {
-    const results = validationResult(req);
-
-    if (!results.isEmpty()) {
-        results.array().forEach((error) => {
-            req.flash('error', error.msg);
-        });
-        return res.redirect('/new-project');
+const processNewProjectForm = async (req, res, next) => {
+    try {
+        const results = validationResult(req);
+        if (!results.isEmpty()) {
+            results.array().forEach((e) => req.flash('error', e.msg));
+            return res.redirect('/new-project');
+        }
+        const { organizationId, title, description, location, date } = req.body;
+        await createProject(title, description, location, date, Number(organizationId));
+        req.flash('success', 'Project added successfully!');
+        res.redirect('/projects');
+    } catch (err) {
+        next(err);
     }
-
-    const { organizationId, title, description, location, date } = req.body;
-
-    await createProject(title, description, location, date, organizationId);
-
-    req.flash('success', 'Project added successfully!');
-    res.redirect('/projects');
 };
 
 const showEditProjectForm = async (req, res) => {
