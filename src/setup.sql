@@ -169,3 +169,18 @@ JOIN roles ON users.role_id = roles.role_id;
 -- Delete the test user
 DELETE FROM users
 WHERE email = 'test@example.com';
+
+CREATE TABLE volunteers (
+    user_id       INTEGER NOT NULL,
+    project_id    INTEGER NOT NULL,
+    signed_up_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, project_id),
+    CONSTRAINT fk_volunteer_user
+        FOREIGN KEY (user_id)
+        REFERENCES users (user_id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_volunteer_project
+        FOREIGN KEY (project_id)
+        REFERENCES service_projects (project_id)
+        ON DELETE CASCADE
+);
