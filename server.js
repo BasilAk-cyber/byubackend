@@ -16,6 +16,10 @@ const PORT = process.env.PORT || 3003;
 const SESSION_SECRET = process.env.SESSION_SECRET;
 const NODE_ENV = process.env.NODE_ENV || "development";
 
+if (NODE_ENV === 'production') {
+    app.set('trust proxy', 1);
+}
+
 app.use(session({
     secret: SESSION_SECRET,
     resave: false,
