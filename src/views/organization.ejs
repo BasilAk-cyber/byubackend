@@ -56,13 +56,15 @@
                 </li>
             <% } %>
         </ul>
+
+        <% if (user && user.role_name === 'admin') { %>
+            <p><a href="/edit-organization/<%= organization.organization_id %>">Edit</a></p>
+        <% } %>
     <% } else { %>
         <h1>Organization not found</h1>
         <p class="lede">That partner organization does not exist.</p>
         <a class="cta" href="/organizations">Back to organizations</a>
     <% } %>
 </main>
-
-<a href="/edit-organization/<%= organization.organization_id %>">Edit</a>
 
 <%- include('partials/footer') %>

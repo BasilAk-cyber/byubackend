@@ -19,8 +19,12 @@ const NODE_ENV = process.env.NODE_ENV || "development";
 app.use(session({
     secret: SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: 60 * 60 * 1000 } // Session expires after 1 hour of inactivity
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 60 * 60 * 1000,
+        httpOnly: true,
+        secure: NODE_ENV === 'production'
+    }
 }));
 
 app.use(flash);
@@ -42,10 +46,16 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
+    res.locals.isLoggedIn = Boolean(
+        req.session && req.session.user
+    );
+
+    // Make the current user (including role_name) available in all templates
+    res.locals.user = (req.session && req.session.user) || null;
+
     res.locals.NODE_ENV = NODE_ENV;
     next();
 });
-
 app.use(router);
 
 app.use((err, req, res, next) => {

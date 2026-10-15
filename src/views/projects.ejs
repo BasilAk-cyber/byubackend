@@ -17,8 +17,10 @@
     </ul>
 </main>
 
-<p>
-    <a href="/new-project">Add New Project</a>
-</p>
+<% if (user && user.role_name === 'admin') { %>
+    <p>
+        <a href="/new-project">Add New Project</a>
+    </p>
+<% } %>
 
 <%- include('partials/footer') %>
